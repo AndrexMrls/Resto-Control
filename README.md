@@ -24,6 +24,6 @@ mvn exec:java
 - Vista visual de ocupación de mesas.
 - Reportes de pedidos y ventas.
 - Cierre de caja de los pedidos entregados desde el cierre anterior.
-- Guardado local automático en `~/.restocontrol/restocontrol.dat`.
+- Los pedidos y cierres se mantienen solo en memoria mientras la aplicación está abierta. Al cerrar y volver a abrir, la aplicación inicia vacía.
 
 El menú ofrece comida de la costa colombiana. Los importes se muestran en pesos colombianos (COP) y los precios del catálogo no superan los $40.000 COP; puedes ajustarlos en `RestaurantController`.
