@@ -27,7 +27,7 @@ public final class Pedido {
             throw new IllegalArgumentException("El pedido debe incluir al menos un producto.");
         }
         if (id == null || createdAt == null || status == null) {
-            throw new IllegalArgumentException("El pedido contiene datos obligatorios vacíos");
+            throw new IllegalArgumentException("El pedido contiene datos obligatorios vacíos.");
         }
         this.id = id;
         this.tableNumber = tableNumber;
