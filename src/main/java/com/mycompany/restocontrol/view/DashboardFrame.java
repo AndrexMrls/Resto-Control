@@ -456,7 +456,10 @@ public final class DashboardFrame extends JFrame {
             Pedido order = controller.getActiveOrderForTable(number);
             boolean outOfService = OUT_OF_SERVICE_TABLES.contains(number);
             boolean occupied = !outOfService && order != null;
-            Color stateColor = outOfService ? TABLE_GRAY : occupied ? RED : GREEN;
+
+            // CAMBIO: las mesas ocupadas ahora usan el color azul PRIMARY
+            Color stateColor = outOfService ? TABLE_GRAY : occupied ? PRIMARY : GREEN;
+
             String stateText = outOfService ? "Fuera de servicio" : occupied ? "Ocupada" : "Disponible";
 
             JPanel table = new TableTile(stateColor, compact);
@@ -477,7 +480,10 @@ public final class DashboardFrame extends JFrame {
         JPanel legend = new JPanel(new FlowLayout(FlowLayout.CENTER, compact ? 10 : 24, 0));
         legend.setOpaque(false);
         legend.add(legendItem(GREEN, "Disponibles"));
-        legend.add(legendItem(RED, "Ocupadas"));
+
+        // CAMBIO: la leyenda de ocupadas ahora es azul
+        legend.add(legendItem(PRIMARY, "Ocupadas"));
+
         legend.add(legendItem(TABLE_GRAY, "Fuera de servicio"));
         content.add(legend, BorderLayout.SOUTH);
         card.add(content, BorderLayout.CENTER);
