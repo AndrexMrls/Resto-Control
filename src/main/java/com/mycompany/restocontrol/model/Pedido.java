@@ -24,7 +24,7 @@ public final class Pedido {
             throw new IllegalArgumentException("La mesa debe estar entre 1 y 12.");
         }
         if (items == null || items.isEmpty()) {
-            throw new IllegalArgumentException("El pedido debe incluir al menos un producto");
+            throw new IllegalArgumentException("El pedido debe incluir al menos un producto.");
         }
         if (id == null || createdAt == null || status == null) {
             throw new IllegalArgumentException("El pedido contiene datos obligatorios vacíos");
