@@ -5,12 +5,14 @@ import com.mycompany.restocontrol.model.Pedido;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 public final class RestaurantRepository {
 
     private List<Pedido> orders = new ArrayList<>();
     private List<CashClosure> closures = new ArrayList<>();
+    private Set<Integer> outOfServiceTables = Set.of();
 
     public RestaurantRepository() throws IOException {
     }
@@ -21,6 +23,14 @@ public final class RestaurantRepository {
 
     public synchronized List<CashClosure> getClosures() {
         return List.copyOf(closures);
+    }
+
+    public synchronized Set<Integer> getOutOfServiceTables() {
+        return outOfServiceTables;
+    }
+
+    public synchronized void setOutOfServiceTables(Set<Integer> tableNumbers) throws IOException {
+        outOfServiceTables = Set.copyOf(tableNumbers);
     }
 
     public synchronized void addOrder(Pedido order) throws IOException {

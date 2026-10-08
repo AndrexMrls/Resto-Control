@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -56,7 +57,28 @@ public final class RestaurantController {
         return MENU;
     }
 
+    public Set<Integer> getOutOfServiceTables() {
+        return repository.getOutOfServiceTables();
+    }
+
+    public void setOutOfServiceTables(Set<Integer> tableNumbers) throws IOException {
+        if (tableNumbers == null || tableNumbers.stream().anyMatch(number -> number < 1 || number > 12)) {
+            throw new IllegalArgumentException("Selecciona mesas válidas entre la 1 y la 12.");
+        }
+        for (int tableNumber : tableNumbers) {
+            if (getActiveOrderForTable(tableNumber) != null) {
+                throw new IllegalArgumentException(
+                        "No se puede dejar fuera de servicio la mesa " + tableNumber
+                        + " porque tiene un pedido activo.");
+            }
+        }
+        repository.setOutOfServiceTables(tableNumbers);
+    }
+
     public Pedido createOrder(int tableNumber, Map<String, Integer> quantities, String note) throws IOException {
+        if (getOutOfServiceTables().contains(tableNumber)) {
+            throw new IllegalArgumentException("La mesa " + tableNumber + " está fuera de servicio.");
+        }
         List<OrderItem> items = new ArrayList<>();
         for (Map.Entry<String, Integer> entry : quantities.entrySet()) {
             if (entry.getValue() > 0) {
@@ -77,7 +99,7 @@ public final class RestaurantController {
 
     public void updateStatus(UUID orderId, OrderStatus status) throws IOException {
         Pedido order = findOrder(orderId);
-        if (order.getStatus() == OrderStatus.CANCELLED || order.getStatus() == OrderStatus.DELIVERED) {
+        if (order.getStatus() == OrderStatus.CANCELLED || order.getStatus() == OrderStatus.FINISHED) {
             throw new IllegalArgumentException("No se puede cambiar el estado de un pedido finalizado.");
         }
         Pedido updatedOrder = new Pedido(order.getId(), order.getTableNumber(), order.getCreatedAt(),
@@ -118,7 +140,7 @@ public final class RestaurantController {
     public BigDecimal getTodaySales() {
         return repository.getOrders().stream()
                 .filter(order -> order.getCreatedAt().toLocalDate().equals(LocalDate.now()))
-                .filter(order -> order.getStatus() == OrderStatus.DELIVERED)
+                .filter(order -> order.getStatus().isServed())
                 .map(Pedido::getTotal)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
@@ -149,7 +171,7 @@ public final class RestaurantController {
 
     private List<Pedido> getPendingCashOrders() {
         return repository.getOrders().stream()
-                .filter(order -> order.getStatus() == OrderStatus.DELIVERED)
+                .filter(order -> order.getStatus().isServed())
                 .filter(order -> repository.getClosures().stream()
                         .noneMatch(closure -> closure.getOrderIds().contains(order.getId())))
                 .toList();

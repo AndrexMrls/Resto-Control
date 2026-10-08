@@ -20,10 +20,11 @@ mvn exec:java
 
 - Panel principal con ventas del día, pedidos activos, mesas ocupadas y pedidos recientes.
 - Creación y seguimiento de pedidos para 12 mesas.
-- Estados de pedido: Nuevo, En preparación, Listo, Entregado y Cancelado.
-- Vista visual de ocupación de mesas.
+- Estados de pedido: Nuevo, En preparación, Listo, Entregado, Finalizado y Cancelado. La mesa sigue ocupada mientras los clientes comen y queda disponible al finalizar el pedido.
+- Vista visual de ocupación de mesas y selección de mesas fuera de servicio desde la sección **Mesas**.
+- Las mesas fuera de servicio no se ofrecen al registrar pedidos; las que tienen pedidos activos no pueden deshabilitarse.
 - Reportes de pedidos y ventas.
 - Cierre de caja de los pedidos entregados desde el cierre anterior.
-- Los pedidos y cierres se mantienen solo en memoria mientras la aplicación está abierta. Al cerrar y volver a abrir, la aplicación inicia vacía.
+- Los pedidos, cierres y selección de mesas fuera de servicio se mantienen solo en memoria mientras la aplicación está abierta. Al cerrar y volver a abrir, la aplicación inicia vacía.
 
 El menú ofrece comida de la costa colombiana. Los importes se muestran en pesos colombianos (COP) y los precios del catálogo no superan los $40.000 COP; puedes ajustarlos en `RestaurantController`.

@@ -5,6 +5,7 @@ public enum OrderStatus {
     PREPARING("En preparación"),
     READY("Listo"),
     DELIVERED("Entregado"),
+    FINISHED("Finalizado"),
     CANCELLED("Cancelado");
 
     private final String label;
@@ -18,6 +19,10 @@ public enum OrderStatus {
     }
 
     public boolean occupiesTable() {
-        return this == NEW || this == PREPARING || this == READY;
+        return this == NEW || this == PREPARING || this == READY || this == DELIVERED;
+    }
+
+    public boolean isServed() {
+        return this == DELIVERED || this == FINISHED;
     }
 }

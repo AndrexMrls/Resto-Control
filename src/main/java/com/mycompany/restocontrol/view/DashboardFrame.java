@@ -26,6 +26,7 @@ import java.text.NumberFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.Currency;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -36,6 +37,7 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
@@ -68,7 +70,6 @@ public final class DashboardFrame extends JFrame {
     private static final Color ORANGE = new Color(180, 83, 9);
     private static final Color RED = new Color(220, 38, 38);
     private static final Color TABLE_GRAY = new Color(148, 163, 184);
-    private static final Set<Integer> OUT_OF_SERVICE_TABLES = Set.of();
     private static final DateTimeFormatter DATE_TIME = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
     private static final NumberFormat CURRENCY = createCurrencyFormat();
     private final RestaurantController controller;
@@ -301,7 +302,7 @@ public final class DashboardFrame extends JFrame {
         card.setBorder(new EmptyBorder(18, 18, 18, 18));
         JPanel actions = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 0));
         actions.setOpaque(false);
-        JButton nextStatus = primaryButton("Avanzar estado");
+        JButton nextStatus = primaryButton("Avanzar pedido");
         JButton cancel = secondaryButton("Cancelar pedido");
         JButton delete = dangerButton("Eliminar cancelado");
         actions.add(nextStatus);
@@ -317,13 +318,16 @@ public final class DashboardFrame extends JFrame {
                 case NEW -> OrderStatus.PREPARING;
                 case PREPARING -> OrderStatus.READY;
                 case READY -> OrderStatus.DELIVERED;
+                case DELIVERED -> OrderStatus.FINISHED;
                 default -> throw new IllegalArgumentException("El pedido ya está finalizado.");
             };
             controller.updateStatus(order.getId(), next);
             showPage("orders");
         }));
         cancel.addActionListener(event -> withSelectedOrder(table, order -> {
-            if (order.getStatus() == OrderStatus.DELIVERED || order.getStatus() == OrderStatus.CANCELLED) {
+            if (order.getStatus() == OrderStatus.DELIVERED
+                    || order.getStatus() == OrderStatus.FINISHED
+                    || order.getStatus() == OrderStatus.CANCELLED) {
                 throw new IllegalArgumentException("El pedido ya está finalizado.");
             }
             int choice = JOptionPane.showConfirmDialog(this,
@@ -352,6 +356,13 @@ public final class DashboardFrame extends JFrame {
 
     private JPanel buildTablesPage() {
         JPanel page = pagePanel();
+        JPanel actions = new JPanel(new FlowLayout(FlowLayout.RIGHT, 0, 0));
+        actions.setOpaque(false);
+        JButton configure = primaryButton("Configurar mesas fuera de servicio");
+        configure.addActionListener(event -> openOutOfServiceTablesDialog());
+        actions.add(configure);
+        page.add(actions);
+        page.add(Box.createVerticalStrut(10));
         page.add(buildTableStatusCard(false));
         return page;
     }
@@ -365,7 +376,9 @@ public final class DashboardFrame extends JFrame {
                 "Esperando atención", PRIMARY));
         summary.add(statCard("En preparación", String.valueOf(counts.getOrDefault(OrderStatus.PREPARING, 0L)),
                 "En cocina", ORANGE));
-        summary.add(statCard("Entregados", String.valueOf(counts.getOrDefault(OrderStatus.DELIVERED, 0L)),
+        long deliveredCount = counts.getOrDefault(OrderStatus.DELIVERED, 0L)
+                + counts.getOrDefault(OrderStatus.FINISHED, 0L);
+        summary.add(statCard("Entregados", String.valueOf(deliveredCount),
                 "Pedidos completados", GREEN));
         summary.add(statCard("Cancelados", String.valueOf(counts.getOrDefault(OrderStatus.CANCELLED, 0L)),
                 "Pedidos cancelados", RED));
@@ -393,7 +406,7 @@ public final class DashboardFrame extends JFrame {
         JLabel heading = label("Pedidos entregados pendientes", 15, TEXT, Font.BOLD);
         current.add(heading, BorderLayout.NORTH);
         JTable pendingTable = buildOrdersTable(controller.getOrders().stream()
-                .filter(order -> order.getStatus() == OrderStatus.DELIVERED)
+                .filter(order -> order.getStatus().isServed())
                 .filter(order -> closures.stream()
                         .noneMatch(closure -> closure.getOrderIds().contains(order.getId())))
                 .toList(), false);
@@ -454,7 +467,7 @@ public final class DashboardFrame extends JFrame {
         grid.setOpaque(false);
         for (int number = 1; number <= 12; number++) {
             Pedido order = controller.getActiveOrderForTable(number);
-            boolean outOfService = OUT_OF_SERVICE_TABLES.contains(number);
+            boolean outOfService = controller.getOutOfServiceTables().contains(number);
             boolean occupied = !outOfService && order != null;
 
             // CAMBIO: las mesas ocupadas ahora usan el color azul PRIMARY
@@ -649,6 +662,7 @@ public final class DashboardFrame extends JFrame {
 
     private void openOrderDialog(Integer initialTable) {
         List<Integer> availableTables = java.util.stream.IntStream.rangeClosed(1, 12)
+                .filter(number -> !controller.getOutOfServiceTables().contains(number))
                 .filter(number -> controller.getActiveOrderForTable(number) == null)
                 .boxed()
                 .toList();
@@ -733,6 +747,68 @@ public final class DashboardFrame extends JFrame {
             }
         });
         dialog.setContentPane(content);
+        dialog.setVisible(true);
+    }
+
+    private void openOutOfServiceTablesDialog() {
+        JDialog dialog = new JDialog(this, "Mesas fuera de servicio", true);
+        dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        dialog.setSize(500, 330);
+        dialog.setLocationRelativeTo(this);
+
+        JPanel content = new JPanel(new BorderLayout(0, 14));
+        content.setBackground(BACKGROUND);
+        content.setBorder(new EmptyBorder(20, 22, 18, 22));
+        content.add(label("Selecciona las mesas que no estarán disponibles para nuevos pedidos.",
+                13, TEXT, Font.BOLD), BorderLayout.NORTH);
+
+        JPanel choices = new JPanel(new GridLayout(0, 3, 12, 10));
+        choices.setOpaque(false);
+        Map<Integer, JCheckBox> tableChoices = new LinkedHashMap<>();
+        Set<Integer> outOfServiceTables = controller.getOutOfServiceTables();
+        for (int number = 1; number <= 12; number++) {
+            JCheckBox choice = new JCheckBox("Mesa " + number);
+            choice.setOpaque(false);
+            choice.setFont(new Font("SansSerif", Font.PLAIN, 12));
+            choice.setSelected(outOfServiceTables.contains(number));
+            if (controller.getActiveOrderForTable(number) != null) {
+                choice.setText("Mesa " + number + " (ocupada)");
+                choice.setEnabled(false);
+            }
+            tableChoices.put(number, choice);
+            choices.add(choice);
+        }
+        content.add(choices, BorderLayout.CENTER);
+        content.add(label("Las mesas con pedidos activos no se pueden deshabilitar.",
+                11, MUTED, Font.PLAIN), BorderLayout.SOUTH);
+
+        JPanel actions = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 0));
+        actions.setOpaque(false);
+        JButton cancel = secondaryButton("Cancelar");
+        JButton save = primaryButton("Guardar selección");
+        actions.add(cancel);
+        actions.add(save);
+        JPanel dialogContent = new JPanel(new BorderLayout(0, 14));
+        dialogContent.setOpaque(false);
+        dialogContent.add(content, BorderLayout.CENTER);
+        dialogContent.add(actions, BorderLayout.SOUTH);
+        cancel.addActionListener(event -> dialog.dispose());
+        save.addActionListener(event -> {
+            Set<Integer> selectedTables = new LinkedHashSet<>();
+            tableChoices.forEach((number, choice) -> {
+                if (choice.isSelected()) {
+                    selectedTables.add(number);
+                }
+            });
+            try {
+                controller.setOutOfServiceTables(selectedTables);
+                dialog.dispose();
+                showPage("tables");
+            } catch (IOException | IllegalArgumentException ex) {
+                showError(ex);
+            }
+        });
+        dialog.setContentPane(dialogContent);
         dialog.setVisible(true);
     }
 
@@ -1068,7 +1144,8 @@ public final class DashboardFrame extends JFrame {
                 } else if (status.equals(OrderStatus.PREPARING.getLabel())
                         || status.equals(OrderStatus.READY.getLabel())) {
                     cell.setForeground(ORANGE);
-                } else if (status.equals(OrderStatus.DELIVERED.getLabel())) {
+                } else if (status.equals(OrderStatus.DELIVERED.getLabel())
+                        || status.equals(OrderStatus.FINISHED.getLabel())) {
                     cell.setForeground(GREEN);
                 } else {
                     cell.setForeground(RED);
