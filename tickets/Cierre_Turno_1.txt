@@ -1,0 +1,39 @@
+==========================================
+        RESTOCONTROL BISTRO & BAR         
+            NIT: 901.458.732-1            
+  Cra. 43A # 1-50, El Poblado, Medellín   
+           Tel: (604) 444-8899            
+==========================================
+      *** CIERRE DE CAJA / TURNO ***      
+==========================================
+TURNO ID:                               #1
+FECHA:                          2026-10-12
+TIPO TURNO:                         Mañana
+CAJERO/USUARIO:                     Andrea
+HORA APERTURA:            12/10/2026 15:49
+HORA CIERRE:              12/10/2026 23:49
+------------------------------------------
+        VENTAS POR METODO DE PAGO         
+------------------------------------------
+Efectivo:                          $40.000
+Nequi / Transferencia:                  $0
+Tarjeta (Débito/Crédito):               $0
+------------------------------------------
+TOTAL VENTAS:                      $40.000
+==========================================
+         ARQUEO DE CAJA EFECTIVO          
+------------------------------------------
+Base de Caja:                     $100.000
+Ventas Efectivo:                   $40.000
+Efectivo Esperado:                $140.000
+Efectivo en Caja:                 $140.000
+------------------------------------------
+DIFERENCIA:                             $0
+==========================================
+
+
+____________________  ____________________
+    Firma Cajero       Firma Administrador
+
+          RestoControl SaaS 2026          
+==========================================

@@ -13,13 +13,24 @@ public final class Pedido {
     private final List<OrderItem> items;
     private final String note;
     private final OrderStatus status;
+    private final int usuarioId;
+    private final int turnoId;
 
     public Pedido(int tableNumber, List<OrderItem> items, String note) {
-        this(UUID.randomUUID(), tableNumber, LocalDateTime.now(), items, note, OrderStatus.NEW);
+        this(UUID.randomUUID(), tableNumber, LocalDateTime.now(), items, note, OrderStatus.NEW,
+                SesionActual.getInstance().getUsuario() != null ? SesionActual.getInstance().getUsuario().getId() : 1,
+                SesionActual.getInstance().getTurnoId());
     }
 
     public Pedido(UUID id, int tableNumber, LocalDateTime createdAt, List<OrderItem> items,
             String note, OrderStatus status) {
+        this(id, tableNumber, createdAt, items, note, status,
+                SesionActual.getInstance().getUsuario() != null ? SesionActual.getInstance().getUsuario().getId() : 1,
+                SesionActual.getInstance().getTurnoId());
+    }
+
+    public Pedido(UUID id, int tableNumber, LocalDateTime createdAt, List<OrderItem> items,
+            String note, OrderStatus status, int usuarioId, int turnoId) {
         if (tableNumber < 1 || tableNumber > 12) {
             throw new IllegalArgumentException("La mesa debe estar entre 1 y 12.");
         }
@@ -35,6 +46,8 @@ public final class Pedido {
         this.items = List.copyOf(items);
         this.note = note == null ? "" : note.trim();
         this.status = status;
+        this.usuarioId = usuarioId;
+        this.turnoId = turnoId;
     }
 
     public UUID getId() {
@@ -72,5 +85,13 @@ public final class Pedido {
                 .map(item -> item.getQuantity() + " x " + item.getName())
                 .reduce((first, second) -> first + ", " + second)
                 .orElse("");
+    }
+
+    public int getUsuarioId() {
+        return usuarioId;
+    }
+
+    public int getTurnoId() {
+        return turnoId;
     }
 }

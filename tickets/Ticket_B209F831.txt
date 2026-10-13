@@ -1,0 +1,42 @@
+==========================================
+        RESTOCONTROL BISTRO & BAR         
+            NIT: 901.458.732-1            
+  Cra. 43A # 1-50, El Poblado, Medellín   
+           Tel: (604) 444-8899            
+     Resolución DIAN No. 18764000123      
+------------------------------------------
+        FACTURA DE VENTA #B209F831        
+Mesa: 2            Fecha: 12/10/2026 23:43
+Mesero: Carlos               Turno: Mañana
+Cajero: Admin                     Caja: 01
+------------------------------------------
+CANT DESCRIPCION                     TOTAL
+------------------------------------------
+1    Posta cartagenera con a       $36.000
+     rroz de coco                         
+------------------------------------------
+SUBTOTAL:                          $36.000
+==========================================
+TOTAL GENERAL:                     $36.000
+==========================================
+METODO DE PAGO:                   EFECTIVO
+MONTO RECIBIDO:                    $36.000
+CAMBIO / DEVUELTA:                      $0
+------------------------------------------
+  ¡Gracias por su visita! Vuelva pronto.  
+         ¡GRACIAS POR SU COMPRA!          
+ Conserve este ticket para reclamaciones  
+------------------------------------------
+        [ QR FACTURA ELECTRONICA ]        
+https://factura.restocontrol.co/f/B209F831
+          ▄▄▄▄▄▄▄  ▄ ▄▄  ▄▄▄▄▄▄▄          
+          █ ▄▄▄ █  ▄▀▄ █ █ ▄▄▄ █          
+          █ ███ █ █▄  ▄█ █ ███ █          
+          █▄▄▄▄▄█ █ ▄▀ █ █▄▄▄▄▄█          
+          ▄▄▄▄▄ ▄▄ ▄▄█▄▄ ▄▄▄ ▄▄▄          
+          █ ▄▀▄▄▄▄█ ▄▀▄▄ █▀▄█▄▄█          
+          ▄▄▄▄▄▄▄ █ ▄ █▄▄█▄ ▄█▄█          
+          █ ▄▄▄ █ █▄▄ ▄▄▄ █ ▄█▄▄          
+          █ ███ █ ▄▀█  █▄█▄▄▄▀█▄          
+          █▄▄▄▄▄█ █▀  ▄█ ▄ ▄▀▄ █          
+==========================================

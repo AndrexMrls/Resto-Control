@@ -145,6 +145,24 @@ public final class RestaurantController {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
+    public BigDecimal getTodaySales(int usuarioId, int turnoId) {
+        return repository.getOrders().stream()
+                .filter(order -> order.getCreatedAt().toLocalDate().equals(LocalDate.now()))
+                .filter(order -> order.getStatus().isServed())
+                .filter(order -> (usuarioId <= 0 || order.getUsuarioId() == usuarioId))
+                .filter(order -> (turnoId <= 0 || order.getTurnoId() == turnoId))
+                .map(Pedido::getTotal)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    public List<Pedido> getOrdersForShift(int usuarioId, int turnoId) {
+        return repository.getOrders().stream()
+                .filter(order -> (usuarioId <= 0 || order.getUsuarioId() == usuarioId))
+                .filter(order -> (turnoId <= 0 || order.getTurnoId() == turnoId))
+                .sorted(Comparator.comparing(Pedido::getCreatedAt).reversed())
+                .toList();
+    }
+
     public BigDecimal getPendingCashTotal() {
         return getPendingCashOrders().stream()
                 .map(Pedido::getTotal)

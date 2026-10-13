@@ -1,0 +1,44 @@
+==========================================
+        RESTOCONTROL BISTRO & BAR         
+            NIT: 901.458.732-1            
+  Cra. 43A # 1-50, El Poblado, Medellín   
+           Tel: (604) 444-8899            
+     Resolución DIAN No. 18764000123      
+------------------------------------------
+        FACTURA DE VENTA #A82F10B4        
+Mesa: 4            Fecha: 12/10/2026 23:15
+Mesero: Andrea               Turno: Mañana
+Cajero: Andrea                    Caja: 01
+------------------------------------------
+CANT DESCRIPCION                     TOTAL
+------------------------------------------
+2    Mojarra frita con arroz       $52.000
+     de coco                              
+2    Limonada de coco              $52.000
+  * Nota: Bien dorada la mojarra
+------------------------------------------
+SUBTOTAL:                         $104.000
+==========================================
+TOTAL GENERAL:                    $104.000
+==========================================
+METODO DE PAGO:                   EFECTIVO
+MONTO RECIBIDO:                   $104.000
+CAMBIO / DEVUELTA:                      $0
+------------------------------------------
+  ¡Gracias por su visita! Vuelva pronto.  
+         ¡GRACIAS POR SU COMPRA!          
+ Conserve este ticket para reclamaciones  
+------------------------------------------
+        [ QR FACTURA ELECTRONICA ]        
+https://factura.restocontrol.co/f/A82F10B4
+          ▄▄▄▄▄▄▄  ▄ ▄▄  ▄▄▄▄▄▄▄          
+          █ ▄▄▄ █  ▄▀▄ █ █ ▄▄▄ █          
+          █ ███ █ █▄  ▄█ █ ███ █          
+          █▄▄▄▄▄█ █ ▄▀ █ █▄▄▄▄▄█          
+          ▄▄▄▄▄ ▄▄ ▄▄█▄▄ ▄▄▄ ▄▄▄          
+          █ ▄▀▄▄▄▄█ ▄▀▄▄ █▀▄█▄▄█          
+          ▄▄▄▄▄▄▄ █ ▄ █▄▄█▄ ▄█▄█          
+          █ ▄▄▄ █ █▄▄ ▄▄▄ █ ▄█▄▄          
+          █ ███ █ ▄▀█  █▄█▄▄▄▀█▄          
+          █▄▄▄▄▄█ █▀  ▄█ ▄ ▄▀▄ █          
+==========================================
